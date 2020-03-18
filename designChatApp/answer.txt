@@ -1,0 +1,27 @@
+How to build a simple web based chat app
+
+Given a short time horizon, I would use a tech stack of react, node, redis,
+postgres, and EC2 (AWS). The reason for these technologies is that I am failiar
+with all of them so I would be able to build at a fast pace without worrying about
+learning their APIs.
+
+The general design would be the react app sends a request to the server (assuming no
+authentication). The request first enters a load balancer responsible for scaling
+up and down (horizontally) depending on the active sockets. Once the load
+balancer selects a server to send the request to, the server establishes a
+socket connection with the client.
+
+The server will use an active record pattern, using reddis as the cache, which
+will persist data in a postgres database (as a background job). Using the AWS
+platform we will be able to use CloudFront to control which regions we roll
+updates to, as well as control cloud resources (EC2, RDS, ElastiCache). The
+benefits of using the services mentioned above is AWS is responsible
+for the maintenance and availability of these services.
+
+Given more time, or as a version 2, I would swap EC2 with a dockerized
+kubernetes cluster. The benefits of this is ease of development, and deployment.
+Kubernetes also has the ability to self heal, spinning up a new pod before
+killing the unhealthy pod. This will help with Up Time. Developing with
+Kubernetes is a breeze since all of your services are running and are connected
+properly. Deploying is a headache if it is done wrong, so why not let kubernetes
+handle it.
